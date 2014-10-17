@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SummarySorter.cs" />
     <Compile Include="Email.cs" />
+    <Compile Include="EmailExtensions.cs" />
     <Compile Include="EmailHeaders.cs" />
     <Compile Include="EmailSorter.cs" />
     <Compile Include="MainForm.cs">
@@ -99,9 +101,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Libraries\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\settings.png" />
   </ItemGroup>

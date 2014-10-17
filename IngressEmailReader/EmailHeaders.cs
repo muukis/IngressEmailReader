@@ -12,7 +12,7 @@ namespace IngressEmailReader
     [Serializable]
     public class EmailItems
     {
-        public Settings Settings = null;
+        public EmailSettings Settings = null;
         public List<EmailItem> Items { get; set; }
         public static readonly string HeadersPath = Assembly.GetExecutingAssembly().Location + ".items";
 

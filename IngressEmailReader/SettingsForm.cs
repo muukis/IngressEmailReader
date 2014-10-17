@@ -13,7 +13,7 @@ namespace IngressEmailReader
 {
     public partial class SettingsForm : Form
     {
-        public Settings Settings { get; set; }
+        public EmailSettings Settings { get; set; }
 
         public SettingsForm()
         {
@@ -33,7 +33,7 @@ namespace IngressEmailReader
 
         private bool CopyFormToSettings()
         {
-            Settings = new Settings();
+            Settings = new EmailSettings();
 
             if (tbHostAddress.Text.Contains(":"))
             {
@@ -68,7 +68,7 @@ namespace IngressEmailReader
             else
             {
                 Settings.HostAddress = tbHostAddress.Text.Trim();
-                Settings.HostPort = null;
+                Settings.HostPort = 0;
 
                 if (Settings.HostAddress.Length == 0)
                 {
@@ -108,7 +108,7 @@ namespace IngressEmailReader
         {
             try
             {
-                Settings = Settings.LoadSettings();
+                Settings = EmailSettings.LoadSettings();
             }
             catch (Exception)
             {
@@ -121,7 +121,7 @@ namespace IngressEmailReader
                 return;
             }
 
-            if (Settings.HostPort.HasValue)
+            if (Settings.HostPort > 0)
             {
                 tbHostAddress.Text = string.Format("{0}:{1}", Settings.HostAddress, Settings.HostPort);
             }
@@ -148,8 +148,8 @@ namespace IngressEmailReader
             try
             {
                 imap.Login(Settings.HostAddress,
-                           (Settings.HostPort.HasValue
-                                ? Settings.HostPort.Value
+                           (Settings.HostPort > 0
+                                ? Settings.HostPort
                                 : (Settings.SslEnabled ? (ushort) 993 : (ushort) 143)),
                            Settings.Username,
                            Settings.Password, Settings.SslEnabled);
@@ -157,7 +157,7 @@ namespace IngressEmailReader
                 imap.SelectFolder(Settings.Folder);
                 imap.ExamineFolder(Settings.Folder);
 
-                ShowInfoMessage("Success!");
+                ShowInfoMessage("Your connection settings seems to be working fine.");
             }
             catch (Exception ex)
             {

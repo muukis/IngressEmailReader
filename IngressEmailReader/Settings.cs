@@ -6,22 +6,25 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using IngressEmailReader.Properties;
 
 namespace IngressEmailReader
 {
     [Serializable]
-    public class Settings
+    public class EmailSettings
     {
-        public static readonly string SettingsPath = Assembly.GetExecutingAssembly().Location + ".settings";
+        public string HostAddress;
+        public ushort HostPort;
+        public string Username;
 
-        public string HostAddress { get; set; }
-        public ushort? HostPort { get; set; }
-        public string Folder { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool SslEnabled { get; set; }
+        [NonSerialized]
+        public string Folder;
+        [NonSerialized]
+        public string Password;
+        [NonSerialized]
+        public bool SslEnabled;
 
-        public bool Equals(Settings settings)
+        public bool Equals(EmailSettings settings)
         {
             return settings != null &&
                    HostAddress == settings.HostAddress &&
@@ -36,7 +39,7 @@ namespace IngressEmailReader
 
         public void Load()
         {
-            Settings settings = LoadSettings();
+            EmailSettings settings = LoadSettings();
 
             if (settings == null)
             {
@@ -51,35 +54,28 @@ namespace IngressEmailReader
             SslEnabled = settings.SslEnabled;
         }
 
-        public static void SaveSettings(Settings settings)
+        public static void SaveSettings(EmailSettings settings)
         {
-            using (Stream stream = File.OpenWrite(SettingsPath))
-            {
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(stream, settings);
-            }
+            Settings.Default.HostAddress = settings.HostAddress;
+            Settings.Default.HostPort = settings.HostPort;
+            Settings.Default.Folder = settings.Folder;
+            Settings.Default.Username = settings.Username;
+            Settings.Default.Password = settings.Password;
+            Settings.Default.SslEnabled = settings.SslEnabled;
+            Settings.Default.Save();
         }
 
-        public static Settings LoadSettings()
+        public static EmailSettings LoadSettings()
         {
-            if (!File.Exists(SettingsPath))
-            {
-                return null;
-            }
+            EmailSettings settings = new EmailSettings();
+            settings.HostAddress = Settings.Default.HostAddress;
+            settings.HostPort = Settings.Default.HostPort;
+            settings.Folder = Settings.Default.Folder;
+            settings.Username = Settings.Default.Username;
+            settings.Password = Settings.Default.Password;
+            settings.SslEnabled = Settings.Default.SslEnabled;
 
-            try
-            {
-                using (Stream stream = File.OpenRead(SettingsPath))
-                {
-                    BinaryFormatter serializer = new BinaryFormatter();
-                    return serializer.Deserialize(stream) as Settings;
-                }
-            }
-            catch (Exception)
-            {
-            }
-
-            return null;
+            return settings;
         }
     }
 }

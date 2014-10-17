@@ -78,6 +78,7 @@ namespace IngressEmailReader
             ListViewItem retval = new ListViewItem(col1);
             retval.SubItems.Add(col2);
             retval.SubItems.Add(col3);
+            retval.SubItems.Add(string.Empty);
 
             retval.Tag = date;
 

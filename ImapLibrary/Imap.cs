@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Xml;
 
 namespace Joshi.Utils.Imap
@@ -8,7 +9,7 @@ namespace Joshi.Utils.Imap
 	/// <summary>
 	/// Imap class implementes IMAP client API
 	/// </summary>
-	public class Imap :  ImapBase
+    public class Imap : ImapBase
 	{
 		/// <summary>
 		/// If user has logged in to his mailbox.

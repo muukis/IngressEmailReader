@@ -11,7 +11,7 @@ namespace IngressEmailReader
     /// <summary>
     /// This class is an implementation of the 'IComparer' interface.
     /// </summary>
-    public class EmailSorter : IComparer
+    public class SummarySorter : IComparer
     {
         /// <summary>
         /// Specifies the column to be sorted
@@ -29,10 +29,10 @@ namespace IngressEmailReader
         /// <summary>
         /// Class constructor.  Initializes various elements
         /// </summary>
-        public EmailSorter()
+        public SummarySorter()
         {
             // Initialize the column to '0'
-            ColumnToSort = 2;
+            ColumnToSort = 1;
 
             // Initialize the sort order to 'none'
             OrderOfSort = SortOrder.Descending;
@@ -56,30 +56,35 @@ namespace IngressEmailReader
             listviewX = (ListViewItem)x;
             listviewY = (ListViewItem)y;
 
-            if (ColumnToSort == 2)
+            if (ColumnToSort == 1)
             {
-                compareResult = DateTime.Compare((DateTime)listviewX.Tag, (DateTime)listviewY.Tag);
-            }
-            else if (ColumnToSort == 3)
-            {
-                long? ticksX = listviewX.SubItems[ColumnToSort].Tag as long?;
-                long? ticksY = listviewY.SubItems[ColumnToSort].Tag as long?;
+                int valueX, valueY;
 
-                if (!ticksX.HasValue && !ticksY.HasValue || ticksX == ticksY)
+                if (!int.TryParse(listviewX.SubItems[ColumnToSort].Text, out valueX))
+                {
+                    valueX = -1;
+                }
+
+                if (!int.TryParse(listviewY.SubItems[ColumnToSort].Text, out valueY))
+                {
+                    valueY = -1;
+                }
+
+                if (valueX == valueY)
                 {
                     compareResult = 0;
                 }
-                else if (!ticksX.HasValue)
+                else if (valueX == -1)
                 {
                     compareResult = -1;
                 }
-                else if (!ticksY.HasValue)
+                else if (valueY == -1)
                 {
                     compareResult = 1;
                 }
                 else
                 {
-                    compareResult = ticksX > ticksY ? 1 : -1;
+                    compareResult = valueX > valueY ? 1 : -1;
                 }
             }
             else
